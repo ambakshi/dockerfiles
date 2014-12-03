@@ -18,7 +18,7 @@ RUN cat /home/dev/.ssh/*.pub >> /root/.ssh/authorized_keys
 RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd
 RUN sed -i 's@session\s*include\s*system-auth$@session optional system-auth@g' /etc/pam.d/su
 EXPOSE 22 80 443 3306
-RUN printf '#!/bin/bash -e\n%s\n' 'service sshd start; service mysqld start; /usr/sbin/httpd -DFOREGROUND' > /base.sh
+RUN printf '#!/bin/bash -e\n%s\n' 'service sshd start; service mysqld start; /usr/sbin/httpd -DFOREGROUND' > /base.sh && chmod +x /base.sh
 CMD ["/bin/bash","-e","/base.sh"]
 ADD ./authorized_keys /root/.ssh/authorized_keys_lc
 RUN cat /root/.ssh/authorized_keys_lc >> /root/.ssh/authorized_keys
