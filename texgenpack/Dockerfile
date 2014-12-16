@@ -8,5 +8,5 @@ RUN git clone https://github.com/hglm/texgenpack.git /src/texgenpack
 RUN make -C /src/texgenpack || test -f /src/texgenpack/texgenpack
 RUN cp /src/texgenpack/texgenpack /usr/bin
 RUN ldconfig
-
+VOLUME /data
 ENTRYPOINT ["/usr/bin/texgenpack"]
