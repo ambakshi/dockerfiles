@@ -1,0 +1,50 @@
+From 0b16bf074019a204a11647d626b9562b2e806096 Mon Sep 17 00:00:00 2001
+From: Amit Bakshi <ambakshi@gmail.com>
+Date: Sun, 28 Dec 2014 14:37:21 +0000
+Subject: [PATCH] Add hiera-eyaml 2.0.6
+
+---
+ puppet.rb | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/puppet.rb b/puppet.rb
+index 2dab684..6f2092b 100644
+--- a/puppet.rb
++++ b/puppet.rb
+@@ -26,6 +26,7 @@ class PuppetGem < FPM::Cookery::Recipe
+     gem_install 'ruby-augeas', '0.5.0'
+     gem_install 'ruby-shadow', '2.3.4'
+     gem_install 'gpgme',       '2.0.7'
++    gem_install 'hiera-eyaml', '2.0.6'
+     gem_install name,          version
+ 
+     # Download init scripts and conf
+@@ -42,6 +43,7 @@ class PuppetGem < FPM::Cookery::Recipe
+     destdir('../bin').install workdir('omnibus.bin'), 'puppet'
+     destdir('../bin').install workdir('omnibus.bin'), 'facter'
+     destdir('../bin').install workdir('omnibus.bin'), 'hiera'
++    destdir('../bin').install workdir('omnibus.bin'), 'eyaml'
+ 
+     # Symlink binaries to PATH using update-alternatives
+     with_trueprefix do
+@@ -98,7 +100,7 @@ class PuppetGem < FPM::Cookery::Recipe
+ set -e
+ 
+ BIN_PATH="#{destdir}/bin"
+-BINS="puppet facter hiera"
++BINS="puppet facter hiera eyaml"
+ 
+ for BIN in $BINS; do
+   update-alternatives --install /usr/bin/$BIN $BIN $BIN_PATH/$BIN 100
+@@ -116,7 +118,7 @@ exit 0
+ set -e
+ 
+ BIN_PATH="#{destdir}/bin"
+-BINS="puppet facter hiera"
++BINS="puppet facter hiera eyaml"
+ 
+ if [ "$1" != "upgrade" ]; then
+   for BIN in $BINS; do
+-- 
+2.2.1
+
