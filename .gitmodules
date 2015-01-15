@@ -1,0 +1,3 @@
+[submodule "perforce"]
+	path = perforce
+	url = git@github.com:ambakshi/docker-perforce.git
