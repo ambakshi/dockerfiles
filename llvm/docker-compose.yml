@@ -1,0 +1,21 @@
+data:
+    image: busybox
+    volumes:
+        - /code/build
+        - /usr/src
+        - /pkg
+    command: true
+
+builder:
+    build: .
+    volumes:
+        - ./pkg:/pkg
+    volumes_from:
+        - data
+    environment:
+        - CLANG_VERSION=3.7
+        - BUILD_NUMBER
+    stdin_open: true
+    tty: true
+    command: make all
+
