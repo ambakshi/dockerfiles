@@ -49,7 +49,6 @@ build: checkout
 package: build
 	bundle install --path vendor/bundle --binstubs bin
 	cd build && rm -rf /tmp/llvm && export DESTDIR=/tmp/llvm && ninja install
-	rm -f llvmall*.deb llvmall*.rpm
+	rm -f llvmall*.deb
 	bin/fpm -s dir -t deb -n llvmall -v $(CLANG_VERSION) --iteration $(BUILD_NUMBER) -C /tmp/llvm opt
-	bin/fpm -s dir -t rpm -n llvmall -v $(CLANG_VERSION) --iteration $(BUILD_NUMBER) -C /tmp/llvm opt
 	test -d ../pkg && cp llvmall* ../pkg || true
