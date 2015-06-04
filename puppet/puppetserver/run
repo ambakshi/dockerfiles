@@ -49,13 +49,15 @@ case "$PROG" in
         JARFILE="puppetdb.jar"
         JAVA_ARGS="${JAVA_ARGS} -cp ${INSTALL_DIR}/${JARFILE} clojure.main -m com.puppetlabs.puppetdb.core services -c ${CONFIG} "
         lockfile=/var/lock/subsys/$prog
-        EXEC="$JAVA_BIN -XX:OnOutOfMemoryError=\"kill -9 %p\" $JAVA_ARGS"
+        EXEC=""
 
         # Move any heap dumps aside
         if [ -e "/var/log/puppetdb/puppetdb-oom.hprof" ] ; then
             mv "/var/log/puppetdb/puppetdb-oom.hprof" "/var/log/puppetdb/puppetdb-oom.hprof.prev"
         fi
-        exec /usr/bin/gosu $USER $EXEC >> /var/log/puppetdb/puppetdb-daemon.log 2>&1 </dev/null
+        exec /usr/bin/gosu $USER $JAVA_BIN \
+            -XX:OnOutOfMemoryError=kill\ -9\ %p \
+            $JAVA_ARGS >> /var/log/puppetdb/puppetdb-daemon.log 2>&1 </dev/null
         ;;
     *)
         echo >&2 "Unknown service $PROG ..."
