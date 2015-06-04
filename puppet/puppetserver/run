@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# taken from the systemd unit file
+#
+set -e
+
+PROG="$1"
+shift
+
+if [ -e /etc/sysconfig/$PROG ]; then
+    . /etc/sysconfig/$PROG
+fi
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+if ! test -e /.${PROG}-init; then
+    case "$PROG" in
+        puppetserver)
+            tar zxf /root/${PROG}.tar.gz -C /
+            #mkdir -p -m 0700 /var/lib/puppet /var/log/puppetserver /var/log/puppet
+            #chown $USER:$USER /var/lib/puppet /var/log/puppetserver
+            puppet config set --section master dns_alt_names "$(hostname -s),$(hostname),puppet,puppetserver,iw-puppet,iw-puppet.activision.com"
+            #puppet config set --section master certname "$(hostname)"
+            ;;
+        puppetdb)
+            tar zxf /root/${PROG}.tar.gz -C /
+            #mkdir -p -m 0775 /var/lib/puppetdb
+            #chown root:puppetdb /var/lib/puppetdb
+            ;;
+        *)
+            echo >&2 "Unknown service $PROG ..."
+            ;;
+    esac
+    touch /.${PROG}-init
+fi
+
+case "$PROG" in
+    puppetserver)
+        exec /usr/bin/gosu $USER $JAVA_BIN $JAVA_ARGS \
+            -XX:OnOutOfMemoryError=kill\ -9\ %p \
+            -XX:+HeapDumpOnOutOfMemoryError \
+            -XX:HeapDumpPath=/var/log/puppetserver \
+            -Djava.security.egd=/dev/urandom \
+            -cp "${INSTALL_DIR}/puppet-server-release.jar" \
+            clojure.main -m puppetlabs.trapperkeeper.main \
+            --config "${CONFIG}" -b "${BOOTSTRAP_CONFIG}" "$@"
+        ;;
+    puppetdb)
+        JARFILE="puppetdb.jar"
+        JAVA_ARGS="${JAVA_ARGS} -cp ${INSTALL_DIR}/${JARFILE} clojure.main -m com.puppetlabs.puppetdb.core services -c ${CONFIG} "
+        lockfile=/var/lock/subsys/$prog
+        EXEC="$JAVA_BIN -XX:OnOutOfMemoryError=\"kill -9 %p\" $JAVA_ARGS"
+
+        # Move any heap dumps aside
+        if [ -e "/var/log/puppetdb/puppetdb-oom.hprof" ] ; then
+            mv "/var/log/puppetdb/puppetdb-oom.hprof" "/var/log/puppetdb/puppetdb-oom.hprof.prev"
+        fi
+        exec /usr/bin/gosu $USER $EXEC >> /var/log/puppetdb/puppetdb-daemon.log 2>&1 </dev/null
+        ;;
+    *)
+        echo >&2 "Unknown service $PROG ..."
+        ;;
+esac

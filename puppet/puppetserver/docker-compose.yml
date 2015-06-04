@@ -1,0 +1,90 @@
+serverdata:
+    image: puppetserver_master
+    entrypoint: /bin/echo
+    command: Puppet data volume container
+    labels:
+        - puppet=true
+        - data=true
+    volumes:
+        - /var/lib/puppet
+        - /var/lib/puppetdb
+        - /var/log/puppetserver
+
+pgdbdata:
+    image: postgres
+    entrypoint: /bin/echo
+    command: Puppetdb postgres data volume container
+    labels:
+        - puppet=true
+        - data=true
+    volumes:
+        - /var/lib/postgresql
+
+pgdb:
+    image: postgres
+    expose:
+        - 5432
+    ports:
+        - "5432:5432"
+    labels:
+        - puppet=true
+    environment:
+        - POSTGRES_PASSWORD="129821!dwpq"
+    volumes_from:
+        - pgdbdata
+
+
+puppetdb:
+    build: .
+    expose:
+        - 8080
+        - 8081
+    ports:
+        - "8080:8080"
+        - "8081:8081"
+    labels:
+        - puppet=true
+    links:
+        - pgdb:postgres
+    hostname: iw-puppetdb.activision.com
+    environment:
+        - POSTGRES_PASSWORD="129821!dwpq"
+    volumes_from:
+        - serverdata
+    command: puppetdb
+
+
+master:
+    build: .
+    expose:
+        - 8140
+    ports:
+        - "8140:8140"
+    links:
+        - puppetdb:puppetdb
+    labels:
+        - puppet=true
+    hostname: iw-puppet.activision.com
+    environment:
+        - POSTGRES_PASSWORD="129821!dwpq"
+    volumes_from:
+        - serverdata
+    command: puppetserver
+
+agent1:
+    image: puppetserver_master
+    links:
+        - master:puppet
+    hostname: agent1
+    entrypoint: /usr/bin/puppet
+    command: agent -t --debug --verbose --waitforcert 120
+
+
+agent2:
+    image: puppetserver_master
+    links:
+        - master:puppet
+    hostname: agent2
+    entrypoint: /usr/bin/puppet
+    command: agent -t --debug --verbose --waitforcert 120
+

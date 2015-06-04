@@ -1,0 +1,14 @@
+---
+:backends:
+  - yaml
+:logger: console
+:hierarchy:
+  - "nodes/%{clientcert}"
+  - "app_tier/%{app_tier}"
+  - "env/%{environment}"
+  - common
+
+
+:yaml:
+  :datadir: "/etc/puppet/environments/%{::environment}/hieradata"
+
