@@ -14,3 +14,7 @@ run:
 
 sshd:
 	docker run -d -e TERM -ti -h `hostname -s`-devbox -p 2222:22 --name devbox ambakshi/devbox sudo /usr/sbin/sshd -D
+
+ssh:
+	@chmod 0600 vagrant
+	ssh -o UserKnownHostsFile=/dev/null -i vagrant -l vagrant -p 2222 localhost
