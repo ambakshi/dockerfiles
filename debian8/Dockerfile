@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
         curl bzip2 hostname wget cron tar rsyslog \
         vim-nox bash-completion git build-essential \
         apt-utils ca-certificates openssl && \
+        curl -sSL https://apt.puppetlabs.com/puppetlabs-release-wheezy.deb > /tmp/puppetlabs-release-wheezy.deb && \
+        dpkg -i /tmp/puppetlabs-release-wheezy.deb && \
         apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -o /usr/bin/gosu -sSL "https://github.com/tianon/gosu/releases/download/1.4/gosu-amd64" && chmod +x /usr/bin/gosu
