@@ -1,0 +1,4 @@
+/influxdb      false influxdb 0755 0755
+/influxdb/data false influxdb 0755 0755
+/influxdb/meta false influxdb 0755 0755
+/influxdb/hh   false influxdb 0755 0755
