@@ -5,17 +5,16 @@
 FROM centos:centos6
 MAINTAINER Amit Bakshi <ambakshi@gmail.com>
 
-## RUN yum update -y
+ENV DEBIANT_FRONTEND=noninteractive
+RUN yum update -y && yum install -y epel-release man which
+RUN rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
 ## RUN yum groupinstall -y 'Development tools'
 
-RUN yum install -y epel-release man which
-RUN rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-13.ius.centos6.noarch.rpm
-RUN yum install -y tar gzip ruby ruby-devel rubygems python python-devel hg ctags-etags \
-    sudo bash-completion curl gcc gcc-c++ make openssh openssh-server openssh-clients git2u
-RUN yum install -y rpmdevtools rpm-build rpm-libs
+RUN yum update -y && yum install -y tar gzip ruby ruby-devel rubygems python python-devel hg ctags-etags \
+    sudo bash-completion curl gcc gcc-c++ make openssh openssh-server openssh-clients git2u rpmdevtools rpm-build rpm-libs
 RUN yum localinstall -y \
              http://yum.baksh.io/el/6/x86_64/vim-7.4-1.x86_64.rpm \
-             http://yum.baksh.io/el/6/x86_64/tmux-1.9a-5.x86_64.rpm
+             http://yum.baksh.io/el/6/x86_64/tmux-2.1-4.x86_64.rpm
 
 ## Fix up some settings to allow sudo/su without docker's terminal
 RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd && \
