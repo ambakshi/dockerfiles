@@ -1,3 +1,6 @@
 [submodule "perforce"]
 	path = perforce
 	url = git@github.com:ambakshi/docker-perforce.git
+[submodule "squid-in-a-can"]
+	path = squid-in-a-can
+	url = https://github.com/jpetazzo/squid-in-a-can.git
