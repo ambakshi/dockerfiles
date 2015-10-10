@@ -4,3 +4,6 @@
 [submodule "squid-in-a-can"]
 	path = squid-in-a-can
 	url = https://github.com/jpetazzo/squid-in-a-can.git
+[submodule "hamba"]
+	path = hamba
+	url = https://github.com/jpetazzo/hamba.git
