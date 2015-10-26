@@ -1,2 +1,3 @@
 *.rpm
 *.deb
+.DS_Store

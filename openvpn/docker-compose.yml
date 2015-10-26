@@ -1,0 +1,14 @@
+data:
+    image: kylemanna/openvpn
+    volumes:
+        - /etc/openvpn
+
+ca:
+    image: kylemanna/openvpn
+    ports:
+        - '1194:1194/udp'
+    cap_add:
+        - NET_ADMIN
+    volumes_from:
+        - data
+
