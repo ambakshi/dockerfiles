@@ -1,10 +1,9 @@
 data:
-    image: busybox
+    image: tianon/true
     volumes:
         - /code/build
         - /usr/src
         - /pkg
-    command: true
 
 builder:
     build: .
@@ -13,9 +12,9 @@ builder:
     volumes_from:
         - data
     environment:
-        - CLANG_VERSION=3.7
-        - BUILD_NUMBER
+        - CLANG_VERSION=3.8
+        - BUILD_NUMBER=2
     stdin_open: true
     tty: true
-    command: make all
+    command: ["make","all"]
 
