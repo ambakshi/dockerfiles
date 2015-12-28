@@ -17,3 +17,4 @@ RUN make checkout
 RUN make -j8 build
 RUN make package
 VOLUME ["/usr/src","/code/build","/pkg"]
+CMD ["/bin/bash","-l"]
