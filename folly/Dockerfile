@@ -22,8 +22,8 @@ RUN apt-get update -q -y && apt-get install -y \
     libssl-dev \
     libiberty-dev \
     git make
-RUN apt-get install -y ruby-dev vim-nox tmux
-RUN gem install --no-rdoc --no-ri fpm
+RUN apt-get install -y ruby-bundler ruby-dev vim-nox tmux
+RUN printf 'source %s\n\ngem %s' "'https://rubygems.org'" "'fpm'" > /tmp/Gemfile && cd /tmp && bundle install
 RUN git clone https://github.com/facebook/folly /usr/src/folly && cd /usr/src/folly && git fetch --all
 WORKDIR /usr/src/folly/folly
 RUN autoreconf -ivf && ./configure && make -j`nproc`
