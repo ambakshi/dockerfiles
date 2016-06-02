@@ -1,3 +1,9 @@
 *.rpm
 *.deb
+*.jar
+*.tar.gz
 .DS_Store
+repo/repodata
+vendor
+repo/hadoop/usr/share
+repo/hadoop/hadoop-2.7.2-src
