@@ -6,7 +6,7 @@ FROM centos:centos6
 MAINTAINER Amit Bakshi <ambakshi@gmail.com>
 
 ENV DEBIANT_FRONTEND=noninteractive
-RUN yum update -y && yum install -y epel-release man which
+RUN yum clean all && yum install -y epel-release man which
 RUN rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
 ## RUN yum groupinstall -y 'Development tools'
 
